@@ -1,0 +1,34 @@
+{
+  "name": "upload",
+  "version": "1.0.0",
+  "description": "upload file or dir to cloud",
+  "main": "index.js",
+  "scripts": {
+   
+  },
+  "bin": {
+    "up": "libs/bin.js",
+    "upload": "libs/bin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/echosoar/upload.git"
+  },
+  "keywords": [
+    "upload",
+    "cloud",
+    "aliyun",
+    "qiniu"
+  ],
+  "author": "echosoar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/echosoar/upload/issues"
+  },
+  "homepage": "https://github.com/echosoar/upload#readme",
+  "dependencies": {
+    "commander": "^4.0.1",
+    "globby": "^10.0.1",
+    "qiniu": "^7.2.2"
+  }
+}
