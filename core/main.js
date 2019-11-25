@@ -50,14 +50,23 @@ class Upload {
   }
 
   async getFiles() {
-    if (!this.options.file) {
+    let pathList = [];
+    if (this.options.file) {
+      pathList.push(this.options.file);
+    }
+    if (this.config.files) {
+      pathList = pathList.concat(this.config.files);
+    }
+
+    if (!pathList.length) {
       this.error('need -f <fileName or dirName>');
     }
-    return globby([this.options.file]);
+
+    return globby(pathList);
   }
 
   error(msg) {
-    throw new Error(msg);
+    console.log('[error] ' + msg);
   }
 
   upload() {

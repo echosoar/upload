@@ -1,6 +1,6 @@
 {
-  "name": "upload",
-  "version": "1.0.0",
+  "name": "cmdup",
+  "version": "1.0.1",
   "description": "upload file or dir to cloud",
   "main": "index.js",
   "scripts": {
