@@ -20,11 +20,20 @@ up -f test.txt -u
 // 将test.txt文件上传
 ```
 
+## 命令行参数
+| 参数 | 释义 |
+| :---: | :---: |
+| -c / --config | 指定配置文件路径 |
+| -f / --file | 指定上传的文件匹配规则或路径 |
+| -t / --type <type> | 使用type类型上传，type包含 qiniu、aliyun 等 |
+| -u / --upload | 立即上传 |
+
+
 ## 配置文件
 cmdup的云存储配置和上传规则都依赖于 `upload.conf.json`配置文件 ，在执行命令时会依次遍历 `执行命令的文件夹`、`用户根目录` 搜索此文件，距离最近的优先级最高。
 
 ### 配置项
-```json
+```js
 {
   "defaultType": "qiniu",       // 默认上传类型（等同于 -t 参数），会根据此类型从cloud中获取配置
   "files": ["dist/main.js"],    // 上传文件列表（等同于 -f 参数）
@@ -73,4 +82,9 @@ $date(yyyy-MM-dd-hh-mm-ss)
 
 #### 文件索引 $index
 同时上传多个文件时，$index 从0开始叠加
+
+#### 获取配置 $conf(path)
+从 `upload.conf.json` 配置文件中的内容中获取数据，path代表路径，如 cloud.qiniu.accessKey
+
+
 
