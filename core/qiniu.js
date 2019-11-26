@@ -32,7 +32,7 @@ class QiNiu {
 
   getFileSaveName(filePath, index) {
     if (!this.fileAutoName) return filePath.replace(/\//g, '_');
-    return autoName(this.fileAutoName, this.config, filePath, index);
+    return autoName(this.fileAutoName, this.config, filePath, this.options.pkg, index);
   }
   
   upload(fileList) {

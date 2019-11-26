@@ -1,8 +1,10 @@
 const { resolve } = require('path');
 const globby = require('globby');
 const { existsSync, readFileSync } = require('fs');
+const Utils = require('./utils');
 const TypeList = ['qiniu', 'aliyun']
 const QiNiu = require('./qiniu.js');
+const pwd = process.env.PWD;
 class Upload {
   constructor(options) {
     this.options = options || {};
@@ -28,25 +30,29 @@ class Upload {
   }
 
   getConfig() {
-    this.configPath = this.getConfigPath();
-    if (!this.configPath) {
-      this.error('no upload config');
-    }
-    const temConf = readFileSync(this.configPath).toString();
-    try {
-      this.config = JSON.parse(temConf);
-    } catch (e) {
-      this.error('config parse error: ' + e.message);
+    const baseConfigPath = this.options.config || 'upload.conf.json';
+    this.getConfigByPath(baseConfigPath);
+    let currentDir = pwd;
+    const rootConfigDir = require('os').homedir();
+    while (currentDir != rootConfigDir) {
+      const currentPath = resolve(currentDir, baseConfigPath);
+      this.getConfigByPath(currentPath);
+      currentDir = resolve(currentDir, '../');
     }
   }
 
-  getConfigPath() {
-    let configPath = this.options.config || 'upload.conf.json';
-    if (existsSync(configPath)) return configPath;
-    configPath = resolve(__dirname, configPath);
-    if (existsSync(configPath)) return configPath;
-    configPath = resolve(require('os').homedir(), configPath);
-    if (existsSync(configPath)) return configPath;
+  getConfigByPath(configPath) {
+    if (!this.config) this.config = {};
+    if (!existsSync(configPath)) {
+      return this.config;
+    }
+    const temConf = readFileSync(configPath).toString();
+    try {
+      const temConfig = JSON.parse(temConf);
+      Utils.deepMerge(temConfig, this.config);
+    } catch (e) {
+    }
+    return this.config;
   }
 
   async getFiles() {
@@ -58,7 +64,7 @@ class Upload {
       pathList = pathList.concat(this.config.files);
     }
 
-    if (!pathList.length) {
+    if (!pathList.length && !this.options.file) {
       this.error('need -f <fileName or dirName>');
     }
 

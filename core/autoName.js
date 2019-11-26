@@ -1,4 +1,7 @@
-const dlv = function(obj, key, def, p, undef) {
+const { resolve } = require('path');
+const { existsSync, readFileSync } = require('fs');
+
+const dlv = function (obj, key, def, p, undef) {
 	key = key.split ? key.split('.') : key;
 	for (p = 0; p < key.length; p++) {
 		obj = obj ? obj[key[p]] : undef;
@@ -51,6 +54,22 @@ module.exports = (autoName, config, path, index) => {
       reg: /\$conf\(\s*(.*?)\s*\)/ig,
       to: (_, dotPath) => {
         return dlv(config, dotPath, '');
+      }
+    },
+    {
+      reg: /\$json\(\s*([^,]*?)\s*,?\s*([^,]*?)\s*\)/ig,
+      to: (_, filePath, dotPath) => {
+        const jsonPath = resolve(process.env.PWD, filePath || 'package.json');
+        let json = {};
+        if (!existsSync(jsonPath)) {
+          return '';
+        }
+        const temJson = readFileSync(jsonPath).toString();
+        try {
+          json = JSON.parse(temJson);
+        } catch (e) {
+        }
+        return dlv(json, dotPath, '');
       }
     },
     {

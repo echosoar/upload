@@ -1,5 +1,5 @@
 const program = require('commander');
-const Upload = require('../');
+const Upload = require('../index.js');
 program
   .option('-c, --config', 'config path')
   .option('-f, --file <file>', 'upload file or dir path')
